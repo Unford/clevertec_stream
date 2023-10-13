@@ -6,8 +6,8 @@ public class Person {
     private String name;
     private int age;
     private double weight;
-    Gender gender;
-    List<Phone> phones;
+    private Gender gender;
+    private List<Phone> phones;
 
     public Person(String name, int age, double weight, Gender gender, List<Phone> phones) {
         this.name = name;
