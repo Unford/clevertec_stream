@@ -56,19 +56,20 @@ public final class CustomUtils {
                 .average();
     }
 
-    public OptionalLong parallelSumOfRandomLong(int randomCount, int parallelism) {
+    public long parallelSumOfRandomLong(int randomCount, int parallelism) {
         Random random = new Random(LocalTime.now().getNano());
         ForkJoinPool customThreadPool = new ForkJoinPool(parallelism);
         return customThreadPool.submit(() ->
                         random.longs(randomCount, 1, 100)
                                 .parallel()
-                                .reduce(Long::sum))
+                                .sum())
                 .join();
     }
 
-    public OptionalLong sequenceSumOfRandomLong(int randomCount) {
+    public long sequenceSumOfRandomLong(int randomCount) {
         Random random = new Random(LocalTime.now().getNano());
-        return random.longs(randomCount, 1, 100)
-                .reduce(Long::sum);
+        return random
+                .longs(randomCount, 1, 100)
+                .sum();
     }
 }
