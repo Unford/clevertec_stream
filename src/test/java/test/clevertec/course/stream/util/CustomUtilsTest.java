@@ -1,6 +1,5 @@
 package test.clevertec.course.stream.util;
 
-import net.datafaker.Faker;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,7 +37,9 @@ class CustomUtilsTest {
     static Stream<Arguments> countWordUsageDataProvider() {
         return Stream.of(
                 Arguments.of(getTestResourcePath("input/Empty.txt"), 0),
-                Arguments.of(getTestResourcePath("input/testText.txt"), 218)
+                Arguments.of(getTestResourcePath("input/testText.txt"), 218),
+                Arguments.of(getTestResourcePath("input/short.txt"), 8)
+
         );
 
     }

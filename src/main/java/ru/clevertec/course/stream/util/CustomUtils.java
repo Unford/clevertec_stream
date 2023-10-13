@@ -31,7 +31,7 @@ public final class CustomUtils {
     public Map<String, Long> countWordUsage(Path input) throws IOException {
         try (Stream<String> stream = Files.lines(input)) {
             return stream
-                    .flatMap(s -> Pattern.compile("\\W+").splitAsStream(s))
+                    .flatMap(s -> Pattern.compile("[^\\wа-яА-Я]++").splitAsStream(s))
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
         }
