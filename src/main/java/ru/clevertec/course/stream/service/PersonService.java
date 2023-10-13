@@ -1,37 +1,38 @@
 package ru.clevertec.course.stream.service;
 
 import ru.clevertec.course.stream.model.Gender;
+import ru.clevertec.course.stream.model.Operator;
 import ru.clevertec.course.stream.model.Person;
-import ru.clevertec.course.stream.model.Phone;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public interface PersonService {
-    void findAllOlder(Collection<Person> people, int n);
+    List<Person> findAllOlder(Collection<Person> people, int age);
 
-    void printNameOfAllHeavier(Collection<Person> people, double n);
+    List<String> findNamesOfAllHeavier(Collection<Person> people, double weight);
 
-    void printNumbersWherePhoneAmountGreater(Collection<Person> people, int n);
+    List<String> findNumbersWherePhoneAmountGreater(Collection<Person> people, int phoneAmount);
 
-    String joinAllNames(Collection<Person> people, char joiner);
+    String joinAllNames(Collection<Person> people, CharSequence delimiter);
 
-    void printSortedByAgeAndName(Collection<Person> people);
+    List<Person> getSortedByAgeAndName(Collection<Person> people);
 
-    Map<Gender, Person> groupByGender(Collection<Person> people);
+    Map<Gender, List<Person>> groupByGender(Collection<Person> people);
 
     boolean containsPhoneNumber(Collection<Person> people, String number);
 
-    List<Phone> getDistinctPersonPhones(Collection<Person> people, int n, String number);
+    List<Operator> getDistinctPersonOperators(Collection<Person> people, int n);
 
     double calculateAverageWeight(Collection<Person> people);
 
-    Person getYoungest(Collection<Person> people);
+    Optional<Person> getYoungest(Collection<Person> people);
 
-    List<String> flatGroupPhonesByOperator(Collection<Person> people);
-    int countGroupedByGender(Collection<Person> people);
+    Map<Operator, List<String>> flatGroupPhonesByOperator(Collection<Person> people);
+    Map<Gender, Long> countGroupedByGender(Collection<Person> people);
 
 
 }

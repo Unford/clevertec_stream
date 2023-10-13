@@ -1,37 +1,74 @@
 package ru.clevertec.course.stream.util;
 
-import java.io.File;
-import java.math.BigInteger;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class CustomUtils {
+    private static final Predicate<String> isNumber = Pattern.compile("-?\\d+").asMatchPredicate();
+
     private CustomUtils() {
     }
 
-    private CustomUtils instance;
+    private static CustomUtils instance;
 
-    public CustomUtils getInstance() {
+    public static CustomUtils getInstance() {
         if (instance == null) {
             instance = new CustomUtils();
         }
         return instance;
     }
 
-    public Map<String, BigInteger> countWordUsage(File input){
-        return null;
+    public Map<String, Long> countWordUsage(Path input) throws IOException {
+        try (Stream<String> stream = Files.lines(input)) {
+            return stream
+                    .flatMap(s -> Pattern.compile("\\W+").splitAsStream(s))
+                    .filter(s -> !s.isBlank())
+                    .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        }
     }
 
-    public int calculateGapBetweenFirstAndLast(List<LocalDate> dates){
-        return 1;
+    public Optional<Long> calculateGapBetweenFirstAndLast(List<LocalDate> dates) {
+        if (dates.size() > 1) {
+            return dates.stream()
+                    .skip(dates.size() - 1)
+                    .findFirst()
+                    .map(s -> ChronoUnit.DAYS.between(s,
+                            dates.stream().findFirst().get()))
+                    .map(Math::abs);
+        }
+        return Optional.empty();
     }
 
-    public double parseAndCalculateAverage(List<String> strings){
-        return 1;
+    public OptionalDouble parseAndCalculateAverage(List<String> strings) {
+        return strings.stream()
+                .filter(isNumber)
+                .mapToInt(Integer::parseInt)
+                .average();
     }
 
-    public BigInteger parallelSumOfRandomInt(int randomCount){
-        return BigInteger.ONE;
+    public OptionalLong parallelSumOfRandomLong(int randomCount, int parallelism) {
+        Random random = new Random(LocalTime.now().getNano());
+        ForkJoinPool customThreadPool = new ForkJoinPool(parallelism);
+        return customThreadPool.submit(() ->
+                        random.longs(randomCount, 1, 100)
+                                .parallel()
+                                .reduce(Long::sum))
+                .join();
+    }
+
+    public OptionalLong sequenceSumOfRandomLong(int randomCount) {
+        Random random = new Random(LocalTime.now().getNano());
+        return random.longs(randomCount, 1, 100)
+                .reduce(Long::sum);
     }
 }
