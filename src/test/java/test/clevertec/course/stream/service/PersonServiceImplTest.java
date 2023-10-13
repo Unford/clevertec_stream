@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.clevertec.course.stream.util.EntityGenerator.generatePerson;
+import static test.clevertec.course.stream.util.EntityGenerator.generatePerson;
 
 class PersonServiceImplTest {
     private List<Person> personList;

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.clevertec.course.stream.util.EntityGenerator.generatePerson;
-import static ru.clevertec.course.stream.util.EntityGenerator.generatePhone;
+import static test.clevertec.course.stream.util.EntityGenerator.generatePerson;
+import static test.clevertec.course.stream.util.EntityGenerator.generatePhone;
 
 class JsonCollectorTest {
     private static final ObjectMapper mapper = new ObjectMapper();

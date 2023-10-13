@@ -1,4 +1,4 @@
-package ru.clevertec.course.stream.util;
+package test.clevertec.course.stream.util;
 
 import net.datafaker.Faker;
 import ru.clevertec.course.stream.model.Gender;
