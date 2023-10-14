@@ -22,6 +22,8 @@ public final class CustomUtils {
     private static final String HEX_PATTERN = "^-?" + HEX_PREFIX + ".+";
     private static final String OCTAL_PATTERN = "^-?0.+";
 
+    private static final String NOT_SYMBOL_PATTERN = "[^\\wа-яА-Я]+";
+
     private static final Map<Predicate<String>, Function<String, Integer>> functions = new LinkedHashMap<>();
 
     static {
@@ -66,7 +68,7 @@ public final class CustomUtils {
     public Map<String, Long> countWordUsage(Path input) throws IOException {
         try (Stream<String> stream = Files.lines(input)) {
             return stream
-                    .flatMap(s -> Pattern.compile("[^\\wа-яА-Я]+").splitAsStream(s))
+                    .flatMap(s -> Pattern.compile(NOT_SYMBOL_PATTERN).splitAsStream(s))
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
         }
