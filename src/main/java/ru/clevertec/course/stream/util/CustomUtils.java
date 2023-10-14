@@ -8,13 +8,31 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class CustomUtils {
-    private static final Predicate<String> isNumber = Pattern.compile("-?\\d+").asMatchPredicate();
+    private static final String EMPTY_STRING = "";
+    private static final String BINARY_PREFIX = "0[bB]";
+    private static final String BINARY_PATTERN = "^-?" + BINARY_PREFIX + ".+";
+    private static final String HEX_PREFIX = "0[xX]";
+    private static final String HEX_PATTERN = "^-?" + HEX_PREFIX + ".+";
+    private static final String OCTAL_PATTERN = "^-?0.+";
+
+    private static final Map<Predicate<String>, Function<String, Integer>> functions = new LinkedHashMap<>();
+
+    static {
+        functions.put(s -> s.matches(BINARY_PATTERN),
+                s -> parseNullableInteger(s.replaceAll(BINARY_PREFIX, EMPTY_STRING), 2));
+        functions.put(s -> s.matches(HEX_PATTERN),
+                s -> parseNullableInteger(s.replaceAll(HEX_PREFIX, EMPTY_STRING), 16));
+        functions.put(s -> s.matches(OCTAL_PATTERN),
+                s -> parseNullableInteger(s, 8));
+        functions.put(s -> true, s -> parseNullableInteger(s, 10));
+    }
 
     private CustomUtils() {
     }
@@ -28,10 +46,27 @@ public final class CustomUtils {
         return instance;
     }
 
+    private static Integer parseInteger(String s) {
+        return functions.entrySet().stream()
+                .filter(e -> e.getKey().test(s))
+                .findFirst()
+                .map(Map.Entry::getValue)
+                .map(f -> f.apply(s))
+                .orElse(null);
+    }
+
+    private static Integer parseNullableInteger(String num, int radix) {
+        try {
+            return Integer.parseInt(num, radix);
+        } catch (NumberFormatException ignored) {
+        }
+        return null;
+    }
+
     public Map<String, Long> countWordUsage(Path input) throws IOException {
         try (Stream<String> stream = Files.lines(input)) {
             return stream
-                    .flatMap(s -> Pattern.compile("[^\\wа-яА-Я]++").splitAsStream(s))
+                    .flatMap(s -> Pattern.compile("[^\\wа-яА-Я]+").splitAsStream(s))
                     .filter(s -> !s.isBlank())
                     .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
         }
@@ -42,17 +77,18 @@ public final class CustomUtils {
             return dates.stream()
                     .skip(dates.size() - 1)
                     .findFirst()
-                    .map(s -> ChronoUnit.DAYS.between(s,
-                            dates.stream().findFirst().get()))
+                    .map(s -> ChronoUnit.DAYS.between(s, dates.stream().findFirst().get()))
                     .map(Math::abs);
         }
         return Optional.empty();
     }
 
+
     public OptionalDouble parseAndCalculateAverage(List<String> strings) {
         return strings.stream()
-                .filter(isNumber)
-                .mapToInt(Integer::parseInt)
+                .map(CustomUtils::parseInteger)
+                .filter(Objects::nonNull)
+                .mapToInt(Integer::intValue)
                 .average();
     }
 
