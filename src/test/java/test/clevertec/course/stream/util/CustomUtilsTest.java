@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -88,7 +86,10 @@ class CustomUtilsTest {
                 Arguments.of(List.of("1", "-1", "33", "10", "1"),
                         IntStream.of(1, -1, 33, 10, 1).average()),
                 Arguments.of(List.of("a", "b", "c", "d", "e"),
-                        IntStream.of().average())
+                        IntStream.of().average()),
+                Arguments.of(
+                        List.of("42", "0x1A", "052", "-0b1010", "12345", "Ox", "-Obx"),
+                        IntStream.of(42, 26, 42, -10, 12345).average())
         );
 
     }
