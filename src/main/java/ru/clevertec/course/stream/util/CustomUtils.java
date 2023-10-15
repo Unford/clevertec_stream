@@ -97,11 +97,13 @@ public final class CustomUtils {
     public long parallelSumOfRandomLong(int randomCount, int parallelism) {
         Random random = new Random(LocalTime.now().getNano());
         ForkJoinPool customThreadPool = new ForkJoinPool(parallelism);
-        return customThreadPool.submit(() ->
+        long result = customThreadPool.submit(() ->
                         random.longs(randomCount, 1, 100)
                                 .parallel()
                                 .sum())
                 .join();
+        customThreadPool.shutdown();
+        return result;
     }
 
     public long sequenceSumOfRandomLong(int randomCount) {
