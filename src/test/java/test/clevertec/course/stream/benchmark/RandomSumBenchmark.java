@@ -15,17 +15,19 @@ import java.util.concurrent.TimeUnit;
 public class RandomSumBenchmark {
     private static final CustomUtils utils = CustomUtils.getInstance();
 
-    @Param({"1000000", "10000000", "100000000"})
+    @Param({"10000","1000000", "10000000", "100000000"})
     static int iterations;
 
 
     @Benchmark
+    @Threads(2)
     public void benchmarkTwoParallelSum(Blackhole blackhole) {
         long sum = utils.parallelSumOfRandomLong(iterations, 2);
         blackhole.consume(sum);
     }
 
     @Benchmark
+    @Threads(4)
     public void benchmarkFourParallelSum(Blackhole blackhole) {
         long sum = utils.parallelSumOfRandomLong(iterations, 4);
         blackhole.consume(sum);
