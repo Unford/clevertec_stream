@@ -2,7 +2,7 @@ package test.clevertec.course.stream.benchmark;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
-import ru.clevertec.course.stream.util.CustomUtils;
+import ru.clevertec.course.stream.service.impl.TextAnalysisServiceImpl;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 2)
 @Fork(value = 1, warmups = 1)
 public class RandomSumBenchmark {
-    private static final CustomUtils utils = CustomUtils.getInstance();
+    private static final TextAnalysisServiceImpl utils = new TextAnalysisServiceImpl();
 
     @Param({"10000","1000000", "10000000", "100000000"})
     static int iterations;

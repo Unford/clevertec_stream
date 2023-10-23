@@ -30,7 +30,7 @@ class PersonServiceImplTest {
         }
     }
 
-    private static final PersonService service = PersonServiceImpl.getInstance();
+    private static final PersonService service = new PersonServiceImpl();
 
     @ParameterizedTest
     @MethodSource("findAllOlderDataProvider")

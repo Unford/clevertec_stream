@@ -10,18 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class PersonServiceImpl implements PersonService {
-    private static PersonServiceImpl instance;
 
-    private PersonServiceImpl() {
-    }
-
-
-    public static PersonServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new PersonServiceImpl();
-        }
-        return instance;
-    }
 
     @Override
     public List<Person> findAllOlder(Collection<Person> people, int age) {
